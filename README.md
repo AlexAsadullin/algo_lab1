@@ -2,6 +2,7 @@
 
 ## QUICK START
 скачать данные - https://disk.360.yandex.ru/d/LPYLKMbkRjNwWw
+
 `pip install -r requirements.txt`
 
 `python.exe main.py`
@@ -42,3 +43,4 @@
 - **`generate_data.py`**: генерация случайных отсортированных массивов
 
 - **`tests.py`**: запуск тестов (подразумевается, что данные уже есть)
+
