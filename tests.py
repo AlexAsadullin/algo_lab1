@@ -1,62 +1,104 @@
-from algorythms import Solution
+from algorithms import Solution
+from generate_data import pair_odd_odd, pair_even_odd, pair_odd_even, pair_even_even, pair_small_long_big_short, pair_big_long_small_short
 import numpy as np
 import json
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 def run_tests(tests_num: int):
-    methods = ['two_pointers', 'binary_search', 'exponential_search', 'binary_divide']
-    method_funcs = {
-        'two_pointers': Solution.two_pointers,
-        'binary_search': Solution.binary_search,
-        'exponential_search': Solution.exponential_search,
-        'binary_divide': Solution.binary_divide
-    }
+    print("=== Testing pair_odd_odd ===")
+    short, long = pair_odd_odd()
+    solution = Solution(short, long)
 
-    print("Running tests...")
-    for test_num in range(tests_num):
-        data = np.load(f'data/{test_num}.npy', allow_pickle=True)
-        arr_m, arr_n = data
-        sol = Solution(arr_m, arr_n)
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
 
-        results = {}
-        times = []
-        mems = []
-        labels = []
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
 
-        for m_name in methods:
-            res, t, m = method_funcs[m_name](sol)
-            results[m_name] = {'res': res, 'time': t, 'mem': m}
-            times.append(t)
-            mems.append(m)
-            labels.append(m_name.replace('_', ' ').title())
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
 
-        fig = make_subplots(rows=1, cols=2, subplot_titles=('Time (s)', 'Memory (bytes)'))
-        fig.add_trace(go.Bar(x=labels, y=times, name='Time'), row=1, col=1)
-        fig.add_trace(go.Bar(x=labels, y=mems, name='Memory'), row=1, col=2)
-        fig.update_yaxes(type='log', row=1, col=1)
-        fig.update_yaxes(type='log', row=1, col=2)
-        fig.update_layout(title_text=f'Test {test_num} Comparison', showlegend=False)
-        fig.write_html(f'charts/{test_num}.html')
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
 
-        report = {'test_num': test_num, 'results': results}
-        with open(f'reports/{test_num}.json', 'w') as f:
-            json.dump(report, f, indent=2)
-        print(f"Test {test_num} completed.")
-    print("Tests completed.")
+    print("\n=== Testing pair_even_odd ===")
+    short, long = pair_even_odd()
+    solution = Solution(short, long)
 
-    print("Generating summary...")
-    total_times = {m: 0 for m in methods}
-    max_mems = {m: 0 for m in methods}
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
 
-    for test_num in range(tests_num):
-        with open(f'reports/{test_num}.json', 'r') as f:
-            report = json.load(f)
-        for m in methods:
-            t = report['results'][m]['time']
-            mem = report['results'][m]['mem']
-            total_times[m] += t
-            max_mems[m] = max(max_mems[m], mem)
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
 
-    for m in methods:
-        print(f"{m}: Total Time: {total_times[m]:.3f}s, Max Mem: {max_mems[m]} bytes")
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+
+    print("\n=== Testing pair_odd_even ===")
+    short, long = pair_odd_even()
+    solution = Solution(short, long)
+
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+
+    print("\n=== Testing pair_even_even ===")
+    short, long = pair_even_even()
+    solution = Solution(short, long)
+
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+
+    print("\n=== Testing pair_small_long_big_short ===")
+    short, long = pair_small_long_big_short()
+    solution = Solution(short, long)
+
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+
+    print("\n=== Testing pair_big_long_small_short ===")
+    short, long = pair_big_long_small_short()
+    solution = Solution(short, long)
+
+    result1, time1, mem1 = solution.two_pointers()
+    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+
+    result2, time2, mem2 = solution.binary_search()
+    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+
+    result3, time3, mem3 = solution.exponential_search()
+    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+
+    result4, time4, mem4 = solution.binary_divide()
+    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+    

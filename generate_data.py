@@ -3,38 +3,78 @@ import random
 import bisect
 
 
-def generate_sorted(size, start=1):
-    if size == 0:
-        return []
-    arr = [start]
-    for _ in range(1, size):
-        increment = random.randint(1, 32768)
-        arr.append(arr[-1] + increment)
+LONG_SIZE = 10_000_000   # ~10 МБ для int64
+SHORT_SIZE = 1_000_000   # ~1 МБ для int64
+
+
+def gen_sorted_random_parity(size: int, start: int = 1, min_step: int = 1, max_step: int = 5) -> np.ndarray:
+    arr = np.empty(size, dtype=np.int64)
+    val = start
+    for i in range(size):
+        arr[i] = val
+        term = random.randint(min_step, max_step)
+        val += term
     return arr
 
-def generate_data(tests_num: int):
-    print("Generating datasets...")
-    for test_num in range(tests_num):
-        random.seed(test_num)
-        if test_num < 200:
-            size = random.randint(1, 100000)
-        elif test_num < 400:
-            size = random.randint(10001, 1000000)
+
+def gen_sorted_by_parity(size: int, even: bool, start: int = 1, min_step: int = 1, max_step: int = 5) -> np.ndarray:
+    arr = np.empty(size, dtype=np.int64)
+    val = start
+    for i in range(size):
+        arr[i] = val
+        if even:
+            term = random.randint(min_step, max_step) * 2
         else:
-            size = random.randint(100001, 10000000)
-        pop_size = 2 * size
-        if test_num % 2 == 0:
-            # No common
-            arr_m = generate_sorted(size, 1)
-            start_n = arr_m[-1] + 1 if arr_m else 1
-            arr_n = generate_sorted(size, start_n)
-        else:
-            # With common
-            arr_m = generate_sorted(size, 1)
-            common = random.choice(arr_m)
-            arr_n_base = generate_sorted(size - 1, 1)
-            pos = bisect.bisect_left(arr_n_base, common)
-            arr_n = arr_n_base[:pos] + [common] + arr_n_base[pos:]
-        np.save(f'data/{test_num}.npy', (arr_m, arr_n))
-        print("generated", test_num)
-    print("Datasets generated.")
+            term = random.randint(min_step, max_step) * 2 + 1
+            
+        val += term
+    return arr
+
+
+def pair_odd_odd():
+    long = gen_sorted_by_parity(LONG_SIZE, start=1, even=False)
+    short = gen_sorted_by_parity(SHORT_SIZE, start=1, even=False)
+    
+    np.save("data/odd_odd_short.npy", short)
+    np.save("data/odd_odd_long.npy",  long)
+    return short, long
+
+
+def pair_even_odd():
+    long = gen_sorted_by_parity(LONG_SIZE, start=2, even=True)
+    short = gen_sorted_by_parity(SHORT_SIZE, start=1, even=False)
+    np.save("data/even_odd_short.npy", short)
+    np.save("data/even_odd_long.npy",  long)
+    return short, long
+
+
+def pair_odd_even():
+    long = gen_sorted_by_parity(LONG_SIZE, start=1, even=False)
+    short = gen_sorted_by_parity(SHORT_SIZE, start=2, even=True)
+    np.save("data/odd_even_short.npy", short)
+    np.save("data/odd_even_long.npy",  long)
+    return short, long
+
+
+def pair_even_even():
+    long = gen_sorted_by_parity(LONG_SIZE, start=2, even=True)
+    short = gen_sorted_by_parity(SHORT_SIZE, start=2, even=True)
+    np.save("data/even_even_short.npy", short)
+    np.save("data/even_even_long.npy",  long)
+    return short, long
+
+
+def pair_small_long_big_short():
+    long = gen_sorted_by_parity(LONG_SIZE, start=1, max_step=5)                # остаёмся < 100000
+    short = gen_sorted_by_parity(SHORT_SIZE, start=100001, min_step=1, max_step=10)
+    np.save("data/small_long_big_short_short.npy", short)
+    np.save("data/small_long_big_short_long.npy",  long)
+    return short, long
+
+
+def pair_big_long_small_short():
+    long = gen_sorted_by_parity(LONG_SIZE, start=100001, min_step=1, max_step=10)
+    short = gen_sorted_by_parity(SHORT_SIZE, start=1, max_step=5)
+    np.save("data/big_long_small_short_short.npy", short)
+    np.save("data/big_long_small_short_long.npy",  long)
+    return short, long
