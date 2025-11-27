@@ -2,7 +2,7 @@
 
 ```bash
 pip3 install -r requirements.txt
-python3 tests.py
+python3 main.py
 ```
 
 ## Алгоритмы
