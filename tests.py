@@ -1,104 +1,142 @@
 from algorithms import Solution
-from generate_data import pair_odd_odd, pair_even_odd, pair_odd_even, pair_even_even, pair_small_long_big_short, pair_big_long_small_short
+from generate_data import pair_odd_odd, pair_even_odd, pair_odd_even, pair_even_even, pair_small_long_big_short, \
+    pair_big_long_small_short, pair_intersecting_ranges, pair_no_intersection, pair_identical_values, \
+    pair_single_element, pair_empty_array, pair_extreme_size_difference, pair_sequential_overlap, pair_both_empty
 import numpy as np
 import json
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-def run_tests(tests_num: int):
-    print("=== Testing pair_odd_odd ===")
-    short, long = pair_odd_odd()
-    solution = Solution(short, long)
 
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+def collect_performance_data():
+    datasets = {
+        'pair_odd_odd': pair_odd_odd,
+        'pair_even_odd': pair_even_odd,
+        'pair_odd_even': pair_odd_even,
+        'pair_even_even': pair_even_even,
+        'pair_small_long_big_short': pair_small_long_big_short,
+        'pair_big_long_small_short': pair_big_long_small_short,
+        'pair_intersecting_ranges': pair_intersecting_ranges,
+        'pair_no_intersection': pair_no_intersection,
+        'pair_identical_values': pair_identical_values,
+        'pair_single_element': pair_single_element,
+        'pair_empty_array': pair_empty_array,
+        'pair_extreme_size_difference': pair_extreme_size_difference,
+        'pair_sequential_overlap': pair_sequential_overlap,
+        'pair_both_empty': pair_both_empty
+    }
 
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+    algorithms = ['two_pointers', 'binary_search', 'exponential_search', 'binary_divide']
+    time_results = {algo: [] for algo in algorithms}
+    memory_results = {algo: [] for algo in algorithms}
 
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+    for dataset_name, dataset_func in datasets.items():
+        print(f"\n=== Testing {dataset_name} ===")
+        short, long = dataset_func()
+        solution = Solution(short, long)
 
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+        for algo in algorithms:
+            method = getattr(solution, algo)
+            try:
+                result, time, mem = method()
+                time_results[algo].append(time)
+                memory_results[algo].append(mem)
+                print(f"{algo} - Time: {time:.6f}s, Memory: {mem} bytes")
+            except Exception as e:
+                time_results[algo].append(-1)
+                memory_results[algo].append(-1)
+                print(f"{algo} - Error: {e}, Time: -1, Memory: -1")
 
-    print("\n=== Testing pair_even_odd ===")
-    short, long = pair_even_odd()
-    solution = Solution(short, long)
+    return time_results, memory_results, list(datasets.keys())
 
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
 
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+def create_performance_chart(time_results, memory_results, dataset_names):
 
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+    fig = go.Figure()
 
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Цвета для алгоритмов
 
-    print("\n=== Testing pair_odd_even ===")
-    short, long = pair_odd_even()
-    solution = Solution(short, long)
+    algorithms = ['two_pointers', 'binary_search', 'exponential_search', 'binary_divide']
+    algorithm_names = {
+        'two_pointers': 'Two Pointers',
+        'binary_search': 'Binary Search',
+        'exponential_search': 'Exponential Search',
+        'binary_divide': 'Binary Divide'
+    }
 
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+    for i, algo in enumerate(algorithms):
+        fig.add_trace(go.Scatter(
+            x=dataset_names,
+            y=time_results[algo],
+            name=algorithm_names[algo],
+            line=dict(color=colors[i], width=3),
+            marker=dict(size=8, color=colors[i]),
+            mode='lines+markers'
+        ))
 
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+    fig.update_layout(
+        title='Сравнение производительности алгоритмов на разных датасетах',
+        xaxis_title='Датасеты',
+        yaxis_title='Время выполнения (секунды)',
+        yaxis_type='log',  # Логарифмическая шкала для оси Y
+        height=600,
+        font=dict(size=12),
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
+    )
 
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+    fig.write_html('charts/time.html')
+    print("\nГрафик сохранен в charts/time.html")
 
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
 
-    print("\n=== Testing pair_even_even ===")
-    short, long = pair_even_even()
-    solution = Solution(short, long)
+def create_memory_chart(time_results, memory_results, dataset_names):
 
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+    fig = go.Figure()
 
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Цвета для алгоритмов
 
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
+    algorithms = ['two_pointers', 'binary_search', 'exponential_search', 'binary_divide']
+    algorithm_names = {
+        'two_pointers': 'Two Pointers',
+        'binary_search': 'Binary Search',
+        'exponential_search': 'Exponential Search',
+        'binary_divide': 'Binary Divide'
+    }
 
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
+    for i, algo in enumerate(algorithms):
+        fig.add_trace(go.Scatter(
+            x=dataset_names,
+            y=memory_results[algo],
+            name=algorithm_names[algo],
+            line=dict(color=colors[i], width=3),
+            marker=dict(size=8, color=colors[i]),
+            mode='lines+markers'
+        ))
 
-    print("\n=== Testing pair_small_long_big_short ===")
-    short, long = pair_small_long_big_short()
-    solution = Solution(short, long)
+    fig.update_layout(
+        title='Сравнение использования памяти алгоритмами на разных датасетах',
+        xaxis_title='Датасеты',
+        yaxis_title='Использование памяти (байты)',
+        yaxis_type='log',  # Логарифмическая шкала для оси Y
+        height=600,
+        font=dict(size=12),
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
+    )
 
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
+    fig.write_html('charts/memory.html')
+    print("График сохранен в charts/memory.html")
 
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
 
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
-
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
-
-    print("\n=== Testing pair_big_long_small_short ===")
-    short, long = pair_big_long_small_short()
-    solution = Solution(short, long)
-
-    result1, time1, mem1 = solution.two_pointers()
-    print(f"Two pointers - Result: {result1}, Time: {time1}, Memory: {mem1}")
-
-    result2, time2, mem2 = solution.binary_search()
-    print(f"Binary search - Result: {result2}, Time: {time2}, Memory: {mem2}")
-
-    result3, time3, mem3 = solution.exponential_search()
-    print(f"Exponential search - Result: {result3}, Time: {time3}, Memory: {mem3}")
-
-    result4, time4, mem4 = solution.binary_divide()
-    print(f"Binary divide - Result: {result4}, Time: {time4}, Memory: {mem4}")
-    
+if __name__ == "__main__":
+    time_results, memory_results, dataset_names = collect_performance_data()
+    create_performance_chart(time_results, memory_results, dataset_names)
+    create_memory_chart(time_results, memory_results, dataset_names)

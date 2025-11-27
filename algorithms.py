@@ -38,7 +38,8 @@ class Solution:
             if self.arr_m[i] == self.arr_n[j]:
                 peak_memory = tracemalloc.get_traced_memory()[1]
                 tracemalloc.stop()
-                return True, time.perf_counter() - start_time, peak_memory - start_memory
+                memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+                return True, time.perf_counter() - start_time, memory_used
             elif self.arr_m[i] < self.arr_n[j]:
                 i += 1
             else:
@@ -46,7 +47,8 @@ class Solution:
 
         peak_memory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
-        return False, time.perf_counter() - start_time, peak_memory - start_memory
+        memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+        return False, time.perf_counter() - start_time, memory_used
 
     def binary_search(self):
         tracemalloc.start()
@@ -60,7 +62,8 @@ class Solution:
                 if self.arr_n[mid] == elem:
                     peak_memory = tracemalloc.get_traced_memory()[1]
                     tracemalloc.stop()
-                    return True, time.perf_counter() - start_time, peak_memory - start_memory
+                    memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+                    return True, time.perf_counter() - start_time, memory_used
                 elif self.arr_n[mid] < elem:
                     left = mid + 1
                 else:
@@ -68,7 +71,8 @@ class Solution:
 
         peak_memory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
-        return False, time.perf_counter() - start_time, peak_memory - start_memory
+        memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+        return False, time.perf_counter() - start_time, memory_used
 
     def exponential_search(self):
         tracemalloc.start()
@@ -79,11 +83,13 @@ class Solution:
             if exponential_search(self.arr_n, elem):
                 peak_memory = tracemalloc.get_traced_memory()[1]
                 tracemalloc.stop()
-                return True, time.perf_counter() - start_time, peak_memory - start_memory
+                memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+                return True, time.perf_counter() - start_time, memory_used
 
         peak_memory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
-        return False, time.perf_counter() - start_time, peak_memory - start_memory
+        memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+        return False, time.perf_counter() - start_time, memory_used
 
     def binary_divide(self):
         tracemalloc.start()
@@ -114,4 +120,5 @@ class Solution:
         res = _has_common(0, len(self.arr_m), 0, len(self.arr_n))
         peak_memory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
-        return res, time.perf_counter() - start_time, peak_memory - start_memory
+        memory_used = max(peak_memory - start_memory, 1)  # Минимум 1 байт для логарифмической шкалы
+        return res, time.perf_counter() - start_time, memory_used
