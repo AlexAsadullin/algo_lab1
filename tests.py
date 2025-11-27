@@ -2,9 +2,6 @@ from algorithms import Solution
 from generate_data import pair_odd_odd, pair_even_odd, pair_odd_even, pair_even_even, pair_small_long_big_short, \
     pair_big_long_small_short, pair_intersecting_ranges, pair_no_intersection, pair_identical_values, \
     pair_single_element, pair_empty_array, pair_extreme_size_difference, pair_sequential_overlap, pair_both_empty
-import numpy as np
-import json
-from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 
@@ -136,7 +133,7 @@ def create_memory_chart(time_results, memory_results, dataset_names):
     print("График сохранен в charts/memory.html")
 
 
-if __name__ == "__main__":
+def run_tests():
     time_results, memory_results, dataset_names = collect_performance_data()
     create_performance_chart(time_results, memory_results, dataset_names)
     create_memory_chart(time_results, memory_results, dataset_names)
