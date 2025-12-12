@@ -1,10 +1,19 @@
 ## Quick Start
 
+скачать данные из облака и поместить в корень директории **/data**
+https://disk.360.yandex.ru/d/LPYLKMbkRjNwWw
+
 ```bash
 
 pip3 install -r requirements.txt
 python3 main.py
 ```
+
+## Изменения на 12 декабря
+- Директория **/charts** добавлена в репозиторий, сохранены 2 графика
+- Исправлен **exponential_search** на правильную сложность O(Mlog(2N/M))
+- Добавлен CONCLUSION.md с выводами и результатами
+
 ## Изменения на 8 декабря
 - Переработана логика возврата для  two_pointers, binary_search, exponential_search (вернем общий элемент вместо True и -1 вместо False, если общего элемента нет) - требования контеста (binary_divide без изменений)
 - Оптимизирована логика binary_search и exponential_search (пожертвовал читаемостью кода, т.к. решения не проходили контест по времени)
