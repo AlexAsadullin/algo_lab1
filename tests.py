@@ -36,13 +36,17 @@ def collect_performance_data():
             method = getattr(solution, algo)
             try:
                 result, time, mem = method()
+                # Используем максимум 1e-9 для очень быстрых операций (избегаем нулевых значений на логарифмической шкале)
+                time = max(time, 1e-9)
+                mem = max(mem, 1)
                 time_results[algo].append(time)
                 memory_results[algo].append(mem)
                 print(f"{algo} - Time: {time:.6f}s, Memory: {mem} bytes")
             except Exception as e:
-                time_results[algo].append(-1)
-                memory_results[algo].append(-1)
-                print(f"{algo} - Error: {e}, Time: -1, Memory: -1")
+                # При ошибке добавляем очень маленькое значение вместо -1
+                time_results[algo].append(1e-9)
+                memory_results[algo].append(1)
+                print(f"{algo} - Error: {e}, Time: 1e-9, Memory: 1")
 
     return time_results, memory_results, list(datasets.keys())
 
