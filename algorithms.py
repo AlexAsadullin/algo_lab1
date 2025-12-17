@@ -9,7 +9,7 @@ from algorithms_sol.exponential import exponential_search
 from algorithms_sol.binary_divide import binary_divide
 
 
-NUM_TESTS_FOR_TIME = 100
+NUM_TESTS_FOR_TIME = 10
 
 class Solution:
     def __init__(self, arr_m, arr_n):
@@ -66,9 +66,9 @@ class Solution:
         memory_used = max(peak / 1024, after_mem - before_mem)  # kbytes
 
         start = time.perf_counter()
-        for _ in range(10):
+        for _ in range(NUM_TESTS_FOR_TIME):
             exponential_search(self.arr_m, self.arr_n)
-        time_spent = (time.perf_counter() - start) / 10
+        time_spent = (time.perf_counter() - start) / NUM_TESTS_FOR_TIME
 
         return res, time_spent, memory_used
 
