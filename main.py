@@ -1,4 +1,4 @@
-from tests import run_tests, worst_case
+from tests import worst_case
 import os
 
 os.makedirs("data", exist_ok=True)

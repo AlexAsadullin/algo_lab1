@@ -60,10 +60,10 @@ def worst_case():
     )
 
     fig.update_xaxes(title_text="Алгоритм", row=1, col=1)
-    fig.update_yaxes(title_text="Время (сек)", row=1, col=1)
+    fig.update_yaxes(title_text="Время (сек)", type="log", row=1, col=1)
 
     fig.update_xaxes(title_text="Алгоритм", row=1, col=2)
-    fig.update_yaxes(title_text="Память (КБ)", row=1, col=2)
+    fig.update_yaxes(title_text="Память (КБ)", type="log", row=1, col=2)
 
     fig.update_layout(
         title_text="Худший случай: Время и Память",
