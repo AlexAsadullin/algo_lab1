@@ -150,13 +150,13 @@ def worst_case():
     print("generating data")
     data_length = 50_000_000
     for i in range(data_length):
-        term = random.randint(1, 10)
+        term = random.randint(3, 10)
         m.append(m[-1] + term)
     for i in range(data_length):
         n.append(m[-1] + 1)
     common = m[-1] + 150
     m.append(common)
-    n.append(common) # худший случай для всех - общий максимум в конце, остальные элементы: m < n
+    n.append(common) # худший случай для всех - общий максимум в конце, i-й элемент m < i-го элемента n
     sol = Solution(m, n)
 
     res1, time1, memory1 = sol.two_pointers()
