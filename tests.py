@@ -146,17 +146,14 @@ def run_tests():
     create_memory_chart(time_results, memory_results, dataset_names)
 
 def worst_case():
-    m, n = [1], [1]
-    print("generating data")
     data_length = 50_000_000
-    for i in range(data_length):
-        term = random.randint(3, 10)
-        m.append(m[-1] + term)
-    for i in range(data_length):
-        n.append(m[-1] + 1)
+    print("start data generating")
+    m = [i for i in range(2, data_length, 2)] # четные 2 4 6 8
+    n = [i for i in range(3, data_length, 2)] #нечетные 3 5 7 9
+    print("data is generated")
     common = m[-1] + 150
     m.append(common)
-    n.append(common) # худший случай для всех - общий максимум в конце, i-й элемент m < i-го элемента n
+    n.append(common) # худший случай для всех - общий максимум в конце, i-й элемент m < i-го элемента n + разная четность для m[i] и n[i]
     sol = Solution(m, n)
 
     res1, time1, memory1 = sol.two_pointers()
